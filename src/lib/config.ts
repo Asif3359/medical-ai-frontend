@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://localhost:8000";
+export const API_BASE_URL = "https://medicale-ai-backend.onrender.com";
 
 export const STORAGE_KEYS = {
   accessToken: "medical_ai_access_token",
