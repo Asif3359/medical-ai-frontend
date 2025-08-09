@@ -1,4 +1,4 @@
-export const API_BASE_URL = "https://medicale-ai-backend.onrender.com";
+export const NEXT_PUBLIC_API_BASE_URL = "https://medicale-ai-backend.onrender.com";
 
 export const STORAGE_KEYS = {
   accessToken: "medical_ai_access_token",
@@ -12,6 +12,6 @@ export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
 
 // If your backend exposes a prediction image endpoint, update the template below.
 // The placeholder {id} will be replaced with the prediction_id
-export const PREDICTION_IMAGE_URL_TEMPLATE = `${API_BASE_URL}/predictions/{id}/image`;
+export const PREDICTION_IMAGE_URL_TEMPLATE = `${NEXT_PUBLIC_API_BASE_URL}/predictions/{id}/image`;
 
 

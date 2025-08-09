@@ -1,6 +1,6 @@
 "use client";
 
-import { API_BASE_URL, STORAGE_KEYS } from "./config";
+import { NEXT_PUBLIC_API_BASE_URL, STORAGE_KEYS } from "./config";
 import type { ApiInfo } from "@/types";
 
 export type ApiError = {
@@ -31,7 +31,7 @@ async function handleJson<T>(res: Response): Promise<T> {
 }
 
 export async function getApiInfo(): Promise<ApiInfo> {
-  const res = await fetch(`${API_BASE_URL}/`, { cache: "no-store" });
+  const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/`, { cache: "no-store" });
   return handleJson<ApiInfo>(res);
 }
 
@@ -54,7 +54,7 @@ export async function predictImage(args: {
   if (args.user_name) form.append("user_name", args.user_name);
   if (args.user_email) form.append("user_email", args.user_email);
 
-  const res = await fetch(`${API_BASE_URL}/predict`, {
+  const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/predict`, {
     method: "POST",
     body: form,
     headers: {
@@ -72,7 +72,7 @@ export type HealthResponse = {
 };
 
 export async function getHealth(): Promise<HealthResponse> {
-  const res = await fetch(`${API_BASE_URL}/health`, { cache: "no-store" });
+  const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/health`, { cache: "no-store" });
   return handleJson<HealthResponse>(res);
 }
 
@@ -83,7 +83,7 @@ export type StatsResponse = {
 };
 
 export async function getStats(): Promise<StatsResponse> {
-  const res = await fetch(`${API_BASE_URL}/stats`, {
+  const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/stats`, {
     cache: "no-store",
     headers: { ...getAuthHeaders() },
   });
@@ -97,7 +97,7 @@ export type UserStatsResponse = {
 };
 
 export async function getUserStats(email: string): Promise<UserStatsResponse> {
-  const res = await fetch(`${API_BASE_URL}/user/${encodeURIComponent(email)}/stats`, {
+  const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/user/${encodeURIComponent(email)}/stats`, {
     cache: "no-store",
     headers: { ...getAuthHeaders() },
   });
@@ -120,7 +120,7 @@ export async function getUserPredictions(args: {
   limit?: number;
 }): Promise<UserPredictionListItem[]> {
   const { email, skip = 0, limit = 50 } = args;
-  const url = new URL(`${API_BASE_URL}/user/${encodeURIComponent(email)}/predictions`);
+  const url = new URL(`${NEXT_PUBLIC_API_BASE_URL}/user/${encodeURIComponent(email)}/predictions`);
   url.searchParams.set("skip", String(skip));
   url.searchParams.set("limit", String(Math.min(Math.max(limit, 1), 100)));
   const res = await fetch(url.toString(), {
@@ -135,7 +135,7 @@ export async function registerUser(args: {
   email: string;
   password: string;
 }) {
-  const res = await fetch(`${API_BASE_URL}/auth/register`, {
+  const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -151,7 +151,7 @@ export async function registerUser(args: {
 }
 
 export async function loginUser(args: { email: string; password: string }) {
-  const res = await fetch(`${API_BASE_URL}/auth/login`, {
+  const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
