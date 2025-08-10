@@ -7,6 +7,7 @@ import Uploader from "@/components/Uploader";
 import ResultsPanel from "@/components/ResultsPanel";
 import type { PredictResponse } from "@/lib/api";
 import type { UserPredictionListItem } from "@/lib/api";
+// import { getUserPredictions } from "@/lib/api";
 import { PREDICTION_IMAGE_URL_TEMPLATE } from "@/lib/config";
 import { STORAGE_KEYS } from "@/lib/config";
 import MobileDrawer from "@/components/MobileDrawer";
@@ -19,6 +20,8 @@ export default function Home() {
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [historyReload, setHistoryReload] = useState(0);
+  // const [predictions, setPredictions] = useState<UserPredictionListItem[]>([]);
+  // const [predictionsLoading, setPredictionsLoading] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem(STORAGE_KEYS.accessToken);
@@ -28,6 +31,31 @@ export default function Home() {
       router.replace("/auth");
     }
   }, [router]);
+
+  // Shared predictions loading effect
+  useEffect(() => {
+    if (!isAuthed) return;
+    
+    const email = localStorage.getItem(STORAGE_KEYS.userEmail);
+    if (!email) return;
+
+    // async function loadPredictions() {
+    //   setPredictionsLoading(true);
+    //   try {
+    //     const list = await getUserPredictions({ email: email as string, limit: 50 });
+    //     setPredictions(list);
+    //     console.log(list);
+    //   } catch (error) {
+    //     console.error('Failed to load predictions:', error);
+    //   } finally {
+    //     setPredictionsLoading(false);
+    //   }
+    // }
+
+    // loadPredictions();
+  }, [isAuthed, historyReload]);
+
+
 
   const content = useMemo(() => {
     if (!isAuthed) return null;
@@ -54,6 +82,8 @@ export default function Home() {
               setIsAuthed(false);
               router.replace("/auth");
             }}
+            // predictions={predictions}
+            // loading={predictionsLoading}
             reloadSignal={historyReload}
             onSelect={(item) => {
               setSelected(item);
@@ -80,7 +110,10 @@ export default function Home() {
               setDrawerOpen(false);
               router.replace("/auth");
             }}
+            // predictions={predictions}
+            // loading={predictionsLoading}
             reloadSignal={historyReload}
+            isVisible={drawerOpen}
             onSelect={(item) => {
               setSelected(item);
               if (item.all_predictions) {

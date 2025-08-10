@@ -5,28 +5,40 @@ import { getUserPredictions, logoutUser, type UserPredictionListItem } from "@/l
 import { IconHistory, IconLogout, IconUser } from "./Icons";
 import { STORAGE_KEYS } from "@/lib/config";
 
-export default function Sidebar({ onLogout, onSelect, reloadSignal = 0 }: {
+export default function Sidebar({ 
+  onLogout, 
+  onSelect, 
+  reloadSignal = 0,   
+  // predictions,
+}: {
   onLogout?: () => void;
   onSelect?: (item: UserPredictionListItem) => void;
   reloadSignal?: number;
+  isVisible?: boolean;
+  // predictions?: UserPredictionListItem[];
+  loading?: boolean;
 }) {
   const [name, setName] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
-  const [items, setItems] = useState<UserPredictionListItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [list, setList] = useState<UserPredictionListItem[]>([]);
+  
+
 
   useEffect(() => {
     setName(localStorage.getItem(STORAGE_KEYS.userName));
     const storedEmail = localStorage.getItem(STORAGE_KEYS.userEmail);
     setEmail(storedEmail);
+    console.log("storedEmail", storedEmail);
+    // console.log("predictions", predictions);
+    
     async function load() {
-      if (!storedEmail) return;
-      setLoading(true);
+      // if (!storedEmail || !isVisible) return;
       try {
-        const list = await getUserPredictions({ email: storedEmail, limit: 50 });
-        setItems(list);
+        const list = await getUserPredictions({ email: storedEmail as string, limit: 50 });
+        console.log("list", list);
+        setList(list);
       } finally {
-        setLoading(false);
+        console.log("finally");
       }
     }
     load();
@@ -62,14 +74,11 @@ export default function Sidebar({ onLogout, onSelect, reloadSignal = 0 }: {
         History
       </div>
       <div className="flex-1 overflow-y-auto">
-        {loading && (
-          <div className="px-4 text-sm text-black/60">Loading...</div>
-        )}
-        {!loading && items.length === 0 ? (
+        {list && list.length === 0 ? (
           <div className="text-sm text-black/60 px-4">No predictions yet</div>
         ) : (
           <ul className="space-y-1 px-2">
-            {items.map((it) => (
+            {list && list.map((it) => (
               <li key={it.prediction_id}>
                 <button
                   className="w-full text-left px-2 py-1 rounded hover:bg-black/5"
